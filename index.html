@@ -130,12 +130,6 @@
 
         updateMedia (){
             document.querySelector("#cover").innerHTML = "src=" + this.songs[this.current_index].image_source + "'>" ;
-
-        //     document.querySelector("#bandDiv").innerHTML =
-        // "<img class='band-image' src='../images/" +
-        // this.wordsToPick[this.wordInPlay].picture + "' alt='" +
-        // this.wordsToPick[this.wordInPlay].song + "'>";
-
             document.querySelector("#song-and-artist-name").innerHTML = this.songs[this.current_index].title ;
         }
 
