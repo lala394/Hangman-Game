@@ -1,0 +1,61 @@
+body{
+    background-color: black;
+    background-image: url("../assets/images/background.jpg");
+    margin-bottom: 150px
+}
+.showcase-container {
+    color: aliceblue;
+    width: 45%;
+    margin: 0 auto;
+    border: 1px solid white;
+    text-align: center;
+    height: 470px;
+    background-color: black;
+    border-radius: 10%;
+   
+}
+
+#song-and-artist-name {
+    font-size: 30px;
+    color: yellow;
+    font-weight: bold;
+    margin-top: 20px;
+    font-family: fantasy
+}
+#game-content {
+    height: 300px;
+    width: 80%;
+    margin: 10px auto;
+    margin-top: 20px;
+    border: 4px dashed aliceblue;
+    box-sizing: border-box;
+    height: 380px;
+}
+.picture-side, .game-details {
+    box-sizing: border-box;
+    height: 300px;
+    float: left;
+    width: 48%;
+}
+.picture-side {
+    margin-top: 5px ;
+    border-right: 6px dotted aliceblue;
+    box-sizing: border-box;
+    height: 370px;
+}
+
+#cover {
+    margin-top: 30px; 
+    width: 200px
+
+}
+
+img{
+width: 500px;
+clear:both;
+}
+
+.logo {
+    width: 500px;
+    margin: 0 auto;
+}
