@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <title>Hangman Game</title>
+
+    <link rel="stylesheet" href="assets/style-hangman.css">
+
+</head>
+
+<body>
+
+    <div class="logo"><img src="assets/images/rockbanner2.jpg"></div>
+
+
+    <div class="showcase-container">
+        <div id="song-and-artist-name">Guess The Rock Band</div>
+
+        <div id="game-content">
+
+            <div class="picture-side"><img id="cover" src="assets/images/titlepic1.png"></div>
+
+            <div class="game-details">
+
+                <p>Press any key to get started!</p>
+
+                <p>Wins</p>
+
+                <div id="wins"></div>
+
+                <p>Current Word</p>
+
+                <div id="secret_word"></div>
+
+                <p>Number of guesses remaining</p>
+
+                <div id="guesses_left"></div>
+
+                <p>Letters Already Guessed</p>
+
+                <div id="guessed_letters"></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script type="text/javascript">
+
+        class HangmanGame {
+
+            constructor() {
+                this.wins = 0
+                this.songs = [
+                    { title: "Monster by Skillet", image: "skillet.jpg", band: "skillet", song: "http://tegos.ru/mp3_rus/alternativa/Skillet_-_Monster.mp3" },
+                    { title: "The Kill by 30 Seconds to Mars", image: "mars.jpg", band: "mars", song: "http://adevf.free.fr/adevf/Fun/A%20Beautiful%20Lie/02-30_seconds_to_mars-the_kill.mp3" },
+                    { title: "Bring Me to Life by Evanescence", image: "evanescence.jpg", band: "evanescence" , song: "http://tegos.ru/mp3_rus/alternativa/Evanescence_-_Bring_Me_To_Life.mp3" },
+                    { title: "I Stand Alone by Godsmack", image: "godsmack.jpg", band: "godsmack" , song: "https://dl2.music314.com/ftp/music/2019/83281-01.mp3"},
+                    { title: "Supermasive by Muse", image: "muse.jpg", band: "muse" ,song: "http://www.sentido.ru/audio/Muse_-_Supermassive_Black_Hole_(Twilight_OST).mp3" },
+                    { title: "Augen Auf by Oomph", image: "oomph.jpg", band: "oomph" , song: "http://gsal2.free.fr/Oomph/Augen%20Auf!.mp3" },
+                    { title: "Sonne by Rammstein", image: "rammstein.jpg", band: "rammstein" , song: "http://frankmcgregor.files.wordpress.com/2008/04/rammstein-03-sonne.mp3" },
+                    { title: "Come as You Are by Nirvana", image: "nirvana.jpg", band: "nirvana" , song: "http://billigradio.com/zzold/_notes/GOLD%20-%2001/NIRVANA%20-%20Come%20As%20You%20Are.mp3" },
+                    { title: "Back in Black by AC/DC", image: "acdc.jpg", band: "acdc" , song: "http://herenow.co.il/stuff/backups/music/1000%20Best%20Rock%20Songs%20of%20All%20Time/034.ACDC-1980-Back%20In%20Black-06-Back%20In%20Black.mp3"},
+                    { title: "Show Must Go On by Queen", image: "queen.jpg", band: "queen" , song: "https://u168.ru/shares/%D0%9C%D1%83%D0%B7%D1%8B%D0%BA%D0%B0/%D0%9C%D1%83%D0%B7%D1%8B%D0%BA%D0%B0/Queen/1991%20-%20Innuendo/Queen%20-%20Show%20Must%20Go%20On.mp3" },
+                ]
+                this.current_word = {};
+                this.hidden_word = []
+                this.remaining_guesses = 13
+                this.current_word_index = 0;
+                this.index_reg = []
+                this.already_guessed_letters = []
+                this.correct_guessed_letters = []
+                this.audio = new Audio()
+
+                this.get_current_word()
+                this.set_hidden_word()
+                this.show_game_state()
+            }
+
+            get_current_word() {
+                this.current_word_index = Math.floor(Math.random() * this.songs.length)
+                this.current_word = this.songs[this.current_word_index];
+            }
+
+            set_hidden_word() {
+                this.hidden_word = []
+
+                for (let i = 0; i < this.current_word.band.length; i++) {
+                    if (this.correct_guessed_letters.indexOf(this.current_word.band[i]) != -1) {
+                        this.hidden_word.push(this.current_word.band[i])
+                    } else {
+                        this.hidden_word.push("-")
+                    }
+                }
+
+                document.querySelector('#secret_word').innerHTML = this.hidden_word.join(" ")
+            }
+
+            updateMedia() {
+                document.querySelector(".picture-side").innerHTML = "<img id='cover' src='assets/images/"+this.songs[this.current_word_index].image+"'>";
+
+                document.querySelector("#song-and-artist-name").innerHTML = this.songs[this.current_word_index].title;
+
+                this.audio = new Audio(this.songs[this.current_word_index].song);
+                this.audio.play()
+            }
+
+            set_remaining_guesses() {
+                document.querySelector('#guesses_left').innerHTML = this.remaining_guesses
+            }
+
+            set_guessed_letters() {
+                document.querySelector('#guessed_letters').innerHTML = this.already_guessed_letters.join(",")
+            }
+
+            increment_wins() {
+                this.wins++
+                this.audio.pause()
+            }
+
+            set_wins() {
+                document.querySelector('#wins').innerHTML = this.wins
+            }
+
+            decrement_guesses() {
+                this.remaining_guesses--
+            }
+
+            put_guessed_letter(letter) {
+                if (this.current_word.band.indexOf(letter) != -1) {
+                    if (this.correct_guessed_letters.indexOf(letter) != -1) {
+                        alert("You've already guessed this letter")
+                    } else {
+                        this.correct_guessed_letters.push(letter)
+                        this.decrement_guesses()
+                    }
+                } else {
+                    if (this.already_guessed_letters.indexOf(letter) != -1) {
+                        alert("You've tried this letter already")
+                    } else {
+                        this.already_guessed_letters.push(letter)
+                        this.decrement_guesses()
+                    }
+                }
+            }
+
+            restart_game() {
+                this.current_word = {}
+                this.hidden_word = null
+                this.remaining_guesses = 13
+                this.already_guessed_letters = []
+                this.correct_guessed_letters = []
+                this.get_current_word()
+                this.set_hidden_word()
+   
+            }
+
+            check_game(letter) {
+                this.put_guessed_letter(letter)
+                this.set_hidden_word()
+
+                if (this.remaining_guesses == 0) {
+                    this.restart_game()
+                } else if (this.hidden_word.indexOf("-") == -1) {
+        
+                    this.increment_wins()
+                    this.updateMedia()
+                    this.restart_game()
+                }
+
+                this.show_game_state()
+            }
+
+            show_game_state() {
+                this.set_guessed_letters()
+                this.set_remaining_guesses()
+                this.set_wins()
+                this.set_hidden_word()
+            }
+        }
+
+        let game = new HangmanGame()
+
+        document.onkeyup = function (e) {
+            game.check_game(e.key)
+        }
+
+    </script>
